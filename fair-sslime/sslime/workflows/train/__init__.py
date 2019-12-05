@@ -7,5 +7,6 @@
 #
 
 from sslime.workflows.train.generic_train_loop import generic_train_loop
+from sslime.workflows.train.adv_train_loop import adv_train_loop
 
-TRAIN_LOOPS = {"generic_train_loop": generic_train_loop}
+TRAIN_LOOPS = {"generic_train_loop": generic_train_loop, "adv_train_loop": adv_train_loop}

@@ -7,22 +7,24 @@
 #
 
 import logging
+from tqdm import tqdm
 
 import torch
 import torch.nn as nn
 
+
 from sslime.core.config import config as cfg
 from sslime.meters import METERS
-
+from sslime.utils.utils import is_log_iter, log_train_stats
 
 logger = logging.getLogger(__name__)
 
 
-def generic_eval_loop(val_loader, model, i_epoch):
-    model.eval()
-    eval_meters = [
-        METERS[meter](**cfg.TRAINER.EVAL_METERS[meter])
-        for meter in cfg.TRAINER.EVAL_METERS
+def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch):
+    model.train()
+    train_meters = [
+        METERS[meter](**cfg.TRAINER.TRAIN_METERS[meter])
+        for meter in cfg.TRAINER.TRAIN_METERS
     ]
 
     num_steps = 5
@@ -30,17 +32,17 @@ def generic_eval_loop(val_loader, model, i_epoch):
     data_low = 0
     data_up = 1
 
-
-    for batch in val_loader:
+    for i_batch, batch in enumerate(tqdm(train_loader)):
         batch["data"] = torch.cat(batch["data"]).cuda()
         batch["label"] = torch.cat(batch["label"]).cuda()
 
-	
-	noise = torch.empty(x_nat.shape)
+
+        noise = torch.empty(x_nat.shape)
         nn.init.uniform_(noise, -epsilon, epsilon)
         x = batch["data"] + noise  # Random start
         x = torch.clamp(x, data_low, data_up) # x must remain in its domain
-        x.requires_grad = True
+        # Might need x.requires_grad = true
+	x.requires_grad = true
 
         for i in range(num_steps):
             x.zero_grad()
@@ -54,11 +56,24 @@ def generic_eval_loop(val_loader, model, i_epoch):
             x = torch.clamp(x, data_low, data_up)
             x = torch.clamp(x, batch["data"]-epsilon, batch["data"]+epsilon)
 
+
+
+        out = model(x)
+        loss = criterion(out, batch["label"])
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
         with torch.no_grad():
-            out = model(x)
-            for meter in eval_meters:
+            for meter in train_meters:
                 meter.update(out, batch["label"])
 
-    logger.info("Epoch: {}. Validation Stats".format(i_epoch + 1))
-    for meter in eval_meters:
+        if is_log_iter(i_batch):
+            log_train_stats(
+                i_epoch, i_batch, len(train_loader), optimizer, train_meters
+            )
+
+    scheduler.step()
+    logger.info(f"Epoch: {i_epoch + 1}. Train Stats")
+    for meter in train_meters:
         logger.info(meter)
+
