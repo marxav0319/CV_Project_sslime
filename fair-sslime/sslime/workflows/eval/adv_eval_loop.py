@@ -29,7 +29,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
     epsilon = 0.001
     data_low = 0
     data_up = 1
-
+    step_size = epsilon / 3
 
     for batch in val_loader:
         batch["data"] = torch.cat(batch["data"]).cuda()

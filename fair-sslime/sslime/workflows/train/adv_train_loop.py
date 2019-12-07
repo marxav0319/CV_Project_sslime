@@ -31,6 +31,7 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
     epsilon = 0.001
     data_low = 0
     data_up = 1
+    step_size = epsilon / 3
 
     for i_batch, batch in enumerate(tqdm(train_loader)):
         batch["data"] = torch.cat(batch["data"]).cuda()
