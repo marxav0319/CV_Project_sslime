@@ -40,7 +40,6 @@ def adv_eval_loop(val_loader, model, i_epoch):
         nn.init.uniform_(noise, -epsilon, epsilon)
         x = batch["data"] + noise  # Random start
         x = torch.clamp(x, data_low, data_up) # x must remain in its domain
-        x.requires_grad = True
 
         for i in range(num_steps):
             model.zero_grad()
