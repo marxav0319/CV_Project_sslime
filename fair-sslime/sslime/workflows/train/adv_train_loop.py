@@ -54,7 +54,7 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
 
             x = x + step_size* x.grad.sign()
             x = torch.clamp(x, data_low, data_up)
-            x = torch.clamp(x, batch["data"]-epsilon, batch["data"]+epsilon)
+            x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
             x.grad.data.zero_()
 
 
