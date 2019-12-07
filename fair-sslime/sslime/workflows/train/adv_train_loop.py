@@ -27,11 +27,11 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
         for meter in cfg.TRAINER.TRAIN_METERS
     ]
 
-    num_steps = 5
-    epsilon = 0.001
+    num_steps = 10
+    epsilon = 0.01
     data_low = 0
     data_up = 1
-    step_size = epsilon / 3
+    step_size = epsilon / 4
 
     for i_batch, batch in enumerate(tqdm(train_loader)):
         batch["data"] = torch.cat(batch["data"]).cuda()
@@ -55,7 +55,7 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
             x = torch.clamp(x, data_low, data_up)
             x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
             
-            print("Batch Completed")
+            print(str(i) + ": " + str(loss.data))
             #x.grad.data.zero_()
 
 
