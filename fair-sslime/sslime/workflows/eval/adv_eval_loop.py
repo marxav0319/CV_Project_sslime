@@ -43,7 +43,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
 
         for i in range(num_steps):
             model.zero_grad()
-            x.requires_grad = True
+            x = x.clone().detach().requires_grad_(True)
 
             out = model(x)
             loss = criterion(out, batch["label"])

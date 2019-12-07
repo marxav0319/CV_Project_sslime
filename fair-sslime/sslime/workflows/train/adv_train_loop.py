@@ -46,7 +46,7 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
 
         for i in range(num_steps):
             model.zero_grad()
-            x.requires_grad = True
+            x = x.clone().detach().requires_grad_(True)
 
             out = model(x)
             loss = criterion(out, batch["label"])
@@ -55,6 +55,8 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
             x = x + step_size* x.grad.sign()
             x = torch.clamp(x, data_low, data_up)
             x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
+            
+            print("Batch Completed")
             #x.grad.data.zero_()
 
 
