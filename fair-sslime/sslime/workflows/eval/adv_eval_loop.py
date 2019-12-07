@@ -18,7 +18,7 @@ from sslime.meters import METERS
 logger = logging.getLogger(__name__)
 
 
-def generic_eval_loop(val_loader, model, i_epoch):
+def adv_eval_loop(val_loader, model, i_epoch):
     model.eval()
     eval_meters = [
         METERS[meter](**cfg.TRAINER.EVAL_METERS[meter])
@@ -35,24 +35,24 @@ def generic_eval_loop(val_loader, model, i_epoch):
         batch["data"] = torch.cat(batch["data"]).cuda()
         batch["label"] = torch.cat(batch["label"]).cuda()
 
-    
+
     noise = torch.empty(x_nat.shape)
-        nn.init.uniform_(noise, -epsilon, epsilon)
-        x = batch["data"] + noise  # Random start
-        x = torch.clamp(x, data_low, data_up) # x must remain in its domain
-        x.requires_grad = True
+    nn.init.uniform_(noise, -epsilon, epsilon)
+    x = batch["data"] + noise  # Random start
+    x = torch.clamp(x, data_low, data_up) # x must remain in its domain
+    x.requires_grad = True
 
-        for i in range(num_steps):
-            x.zero_grad()
-            model.zero_grad()
+    for i in range(num_steps):
+        x.zero_grad()
+        model.zero_grad()
 
-            out = model(x)
-            loss = criterion(out, batch["label"])
-            loss.backward()
+        out = model(x)
+        loss = criterion(out, batch["label"])
+        loss.backward()
 
-            x += step_size* x.grad.sign()
-            x = torch.clamp(x, data_low, data_up)
-            x = torch.clamp(x, batch["data"]-epsilon, batch["data"]+epsilon)
+        x += step_size* x.grad.sign()
+        x = torch.clamp(x, data_low, data_up)
+        x = torch.clamp(x, batch["data"]-epsilon, batch["data"]+epsilon)
 
         with torch.no_grad():
             out = model(x)
