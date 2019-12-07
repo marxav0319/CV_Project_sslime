@@ -55,7 +55,7 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
             x = torch.clamp(x, data_low, data_up)
             x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
             
-            print("Batch Completed")
+            print("Batch Completed, Loss: %.2f" % loss.item())
             #x.grad.data.zero_()
 
 
