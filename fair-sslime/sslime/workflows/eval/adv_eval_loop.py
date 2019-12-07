@@ -35,8 +35,8 @@ def generic_eval_loop(val_loader, model, i_epoch):
         batch["data"] = torch.cat(batch["data"]).cuda()
         batch["label"] = torch.cat(batch["label"]).cuda()
 
-	
-	noise = torch.empty(x_nat.shape)
+    
+    noise = torch.empty(x_nat.shape)
         nn.init.uniform_(noise, -epsilon, epsilon)
         x = batch["data"] + noise  # Random start
         x = torch.clamp(x, data_low, data_up) # x must remain in its domain
