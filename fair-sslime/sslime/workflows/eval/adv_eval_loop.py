@@ -43,7 +43,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
     x.requires_grad = True
 
     for i in range(num_steps):
-        x.zero_grad()
+        x.grad.data.zero_()
         model.zero_grad()
 
         out = model(x)
