@@ -44,6 +44,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
 
         for i in range(num_steps):
             model.zero_grad()
+            x.requires_grad = True
 
             out = model(x)
             loss = criterion(out, batch["label"])
@@ -52,7 +53,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
             x = x + step_size* x.grad.sign()
             x = torch.clamp(x, data_low, data_up)
             x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
-            x.grad.data.zero_()
+            #x.grad.data.zero_()
 
         with torch.no_grad():
             out = model(x)
