@@ -64,7 +64,6 @@ def adv_train_loop(train_loader, model, criterion, optimizer, scheduler, i_epoch
         loss = criterion(out, batch["label"])
         optimizer.zero_grad()
         loss.backward()
-        print(x.grad)
         optimizer.step()
         with torch.no_grad():
             for meter in train_meters:
