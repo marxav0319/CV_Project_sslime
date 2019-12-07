@@ -1,6 +1,6 @@
 TRAIN:
   DATA_SOURCES: [disk]
-  DATA_PATHS: [ "path/to/unsupervised_train_images.npy"]
+  DATA_PATHS: [ "/scratch/xaviem01/cv/sslime_test/data/unsupervised_train_images.npy"]
   LABEL_SOURCES: [disk]
   LABEL_PATHS: []
   BATCH_SIZE: 256
@@ -15,7 +15,7 @@ TRAIN:
 
 TEST:
   DATA_SOURCES: [disk]
-  DATA_PATHS: ["path/to/unsupervised_test_images.npy"]
+  DATA_PATHS: ["/scratch/xaviem01/cv/sslime_test/data/unsupervised_test_images.npy"]
   LABEL_SOURCES: [disk]
   LABEL_PATHS: [] 
   BATCH_SIZE: 128
