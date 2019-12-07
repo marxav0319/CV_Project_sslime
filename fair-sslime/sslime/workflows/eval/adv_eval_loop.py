@@ -36,7 +36,7 @@ def adv_eval_loop(val_loader, model, i_epoch):
         batch["label"] = torch.cat(batch["label"]).cuda()
 
 
-    noise = torch.empty(x_nat.shape)
+    noise = torch.empty(batch["data"].shape).cuda()
     nn.init.uniform_(noise, -epsilon, epsilon)
     x = batch["data"] + noise  # Random start
     x = torch.clamp(x, data_low, data_up) # x must remain in its domain
