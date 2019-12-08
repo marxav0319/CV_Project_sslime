@@ -5,3 +5,5 @@ slurm*.out
 /data/
 __pycache__
 *.pyc
+/checkpoint_unsupervised_training
+adv_model_nofinetune.txt

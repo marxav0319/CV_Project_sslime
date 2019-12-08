@@ -43,7 +43,7 @@ TRAINER:
   TRAIN_METERS: {"accuracy": {"topk": [1]}, "loss": {}}
   EVAL_LOOP: "adv_eval_loop"
   EVAL_METERS: {"accuracy": {"topk": [1]}, "loss": {}}
-  MAX_EPOCHS: 60
+  MAX_EPOCHS: 120
   NUM_WORKERS: 20
 
 OPTIMIZER:
