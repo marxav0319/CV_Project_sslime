@@ -55,14 +55,6 @@ class Trainer:
         logger.info(model)
 
         start_epoch = 0
-        if cfg.TRAINER.AUTO_RESUME and checkpoint.has_checkpoint():
-            last_checkpoint = checkpoint.get_last_checkpoint()
-            checkpoint_epoch = checkpoint.load_checkpoint(
-                last_checkpoint, model, optimizer, scheduler
-            )
-            logger.info("Loaded checkpoint from: {}".format(last_checkpoint))
-            if not cfg.TRAINER.RESET_START_EPOCH:
-                start_epoch = checkpoint_epoch + 1
 
         if torch.cuda.is_available():
             if len(cfg.GPU_IDS) > 1 or (
@@ -80,6 +72,32 @@ class Trainer:
                 torch.cuda.set_device(cfg.GPU_IDS[0])
 
             model.cuda()
+
+        if cfg.TRAINER.AUTO_RESUME and checkpoint.has_checkpoint():
+            last_checkpoint = checkpoint.get_last_checkpoint()
+            checkpoint_epoch = checkpoint.load_checkpoint(
+                last_checkpoint, model, optimizer, scheduler
+            )
+            logger.info("Loaded checkpoint from: {}".format(last_checkpoint))
+            if not cfg.TRAINER.RESET_START_EPOCH:
+                start_epoch = checkpoint_epoch + 1
+
+        #if torch.cuda.is_available():
+        #    if len(cfg.GPU_IDS) > 1 or (
+        #        len(cfg.GPU_IDS) == 0 and torch.cuda.device_count() > 1
+        #    ):
+        #        num_gpus = (
+        #            len(cfg.GPU_IDS) if cfg.GPU_IDS else torch.cuda.device_count()
+        #        )
+        #        model = nn.DataParallel(
+        #            model, device_ids=(cfg.GPU_IDS if cfg.GPU_IDS else None)
+        #        )
+        #        cfg.TRAIN.BATCH_SIZE = cfg.TRAIN.BATCH_SIZE * num_gpus
+        #        cfg.TEST.BATCH_SIZE = cfg.TEST.BATCH_SIZE * num_gpus
+        #    elif len(cfg.GPU_IDS) == 1:
+        #        torch.cuda.set_device(cfg.GPU_IDS[0])
+
+        #    model.cuda()
 
         train_dataset = GenericSSLDataset("TRAIN")
         train_loader = DataLoader(
