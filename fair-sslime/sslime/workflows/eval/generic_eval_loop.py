@@ -17,7 +17,7 @@ from sslime.meters import METERS
 logger = logging.getLogger(__name__)
 
 
-def generic_eval_loop(val_loader, model, i_epoch):
+def generic_eval_loop(val_loader, model, criterion, i_epoch):
     model.eval()
     eval_meters = [
         METERS[meter](**cfg.TRAINER.EVAL_METERS[meter])

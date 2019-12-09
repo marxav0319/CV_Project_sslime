@@ -18,18 +18,18 @@ from sslime.meters import METERS
 logger = logging.getLogger(__name__)
 
 
-def adv_eval_loop(val_loader, model, i_epoch):
+def adv_eval_loop(val_loader, model, criterion, i_epoch):
     model.eval()
     eval_meters = [
         METERS[meter](**cfg.TRAINER.EVAL_METERS[meter])
         for meter in cfg.TRAINER.EVAL_METERS
     ]
 
-    num_steps = 5
-    epsilon = 0.001
+    num_steps = 10
+    epsilon = 0.01
     data_low = 0
     data_up = 1
-    step_size = epsilon / 3
+    step_size = epsilon / 6
 
     for batch in val_loader:
         batch["data"] = torch.cat(batch["data"]).cuda()

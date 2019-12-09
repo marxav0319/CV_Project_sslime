@@ -132,7 +132,7 @@ class Trainer:
                 checkpoint.save_checkpoint(model, optimizer, scheduler, i_epoch)
             if cfg.TRAINER.EVAL_MODEL and is_eval_epoch(i_epoch):
                 test_timer.tic()
-                self.eval_loop(val_loader, model, i_epoch)
+                self.eval_loop(val_loader, model, criterion, i_epoch)
                 test_timer.toc()
 
             log_post_epoch_timer_stats(train_timer, test_timer, i_epoch)
