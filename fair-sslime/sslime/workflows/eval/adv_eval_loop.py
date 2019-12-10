@@ -50,8 +50,8 @@ def adv_eval_loop(val_loader, model, criterion, i_epoch):
             loss.backward()
 
             x = x + step_size* x.grad.sign()
-            x = torch.clamp(x, data_low, data_up)
-            #x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
+            #x = torch.clamp(x, data_low, data_up)
+            x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
             #x.grad.data.zero_()
 
         with torch.no_grad():
