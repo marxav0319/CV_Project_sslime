@@ -27,8 +27,8 @@ def adv_eval_loop(val_loader, model, criterion, i_epoch):
 
     num_steps = 10
     epsilon = 0.01
-    data_low = 0
-    data_up = 1
+    #data_low = 0
+    #data_up = 1
     step_size = epsilon / 6
 
     for batch in val_loader:
@@ -39,7 +39,7 @@ def adv_eval_loop(val_loader, model, criterion, i_epoch):
         noise = torch.empty(batch["data"].shape).cuda()
         nn.init.uniform_(noise, -epsilon, epsilon)
         x = batch["data"] + noise  # Random start
-        x = torch.clamp(x, data_low, data_up) # x must remain in its domain
+        #x = torch.clamp(x, data_low, data_up) # x must remain in its domain
 
         for i in range(num_steps):
             model.zero_grad()
@@ -51,7 +51,7 @@ def adv_eval_loop(val_loader, model, criterion, i_epoch):
 
             x = x + step_size* x.grad.sign()
             x = torch.clamp(x, data_low, data_up)
-            x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
+            #x = torch.min(torch.max(x, batch["data"]-epsilon), batch["data"]+epsilon)
             #x.grad.data.zero_()
 
         with torch.no_grad():
