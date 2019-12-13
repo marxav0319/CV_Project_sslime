@@ -6,4 +6,6 @@ slurm*.out
 __pycache__
 *.pyc
 /checkpoint_unsupervised_training
+/checkpoint_adv_training
+/bin/bash: wq: command not found
 adverserial_train_nofinetune.txt

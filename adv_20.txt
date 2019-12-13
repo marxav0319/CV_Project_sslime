@@ -1,0 +1,768 @@
+[INFO: config.py:  154]: Training with config:
+[INFO: config.py:  155]: {'CHECKPOINT': {'CHECKPOINT_PERIOD': 1,
+                'DIR': './checkpoint_adv_training',
+                'FEATURE_EXTRACTOR_PARAMS': ''},
+ 'GPU_IDS': [],
+ 'MODEL': {'EVAL_FEATURES': [],
+           'FEATURE_EVAL_MODE': False,
+           'HEAD': {'APPLY_BATCHNORM': True,
+                    'BATCHNORM_EPS': 1e-05,
+                    'BATCHNORM_MOMENTUM': 0.1,
+                    'PARAMS': [['eval_mlp',
+                                {'dims': [4608, 4], 'in_channels': 512}]]},
+           'TRUNK': {'LINEAR_FEAT_POOL_OPS': [('AdaptiveMaxPool2d', [12]),
+                                              ('AdaptiveMaxPool2d', [7]),
+                                              ('AdaptiveMaxPool2d', [5]),
+                                              ('AdaptiveMaxPool2d', [6]),
+                                              ('AdaptiveMaxPool2d', [6])],
+                     'SHOULD_FLATTEN': False,
+                     'TYPE': 'vgg_a'}},
+ 'OPTIMIZER': {'BASE_LR': 0.1,
+               'DAMPENING': 0,
+               'MOMENTUM': 0.9,
+               'NESTEROV': True,
+               'REGULARIZE_BATCHNORM': False,
+               'REGULARIZE_BIAS': True,
+               'TYPE': 'sgd',
+               'WEIGHT_DECAY': 0.0001},
+ 'SCHEDULER': {'GAMMA': 0.1, 'STEP_SIZE': 25, 'TYPE': 'step'},
+ 'TEST': {'BATCH_SIZE': 128,
+          'DATA_PATHS': ['/scratch/sgt287/cv/CV_Project_sslime/data/unsupervised_test_images.npy'],
+          'DATA_SOURCES': ['disk'],
+          'DEFAULT_GRAY_IMG_SIZE': 96,
+          'EVERSTORE_RETRY': 3,
+          'LABEL_PATHS': [],
+          'LABEL_SOURCES': ['disk'],
+          'MMAP_MODE': True,
+          'TRANSFORMS': [['ssl_rotate', {'indices': [0]}],
+                         ['ToTensor'],
+                         ['Normalize',
+                          {'args': [[0.44671062, 0.43980984, 0.40664645],
+                                    [0.26034098, 0.25657727, 0.27126738]]}]]},
+ 'TRAIN': {'BATCH_SIZE': 256,
+           'DATA_PATHS': ['/scratch/sgt287/cv/CV_Project_sslime/data/unsupervised_train_images.npy'],
+           'DATA_SOURCES': ['disk'],
+           'DEFAULT_GRAY_IMG_SIZE': 96,
+           'EVERSTORE_RETRY': 3,
+           'LABEL_PATHS': [],
+           'LABEL_SOURCES': ['disk'],
+           'MMAP_MODE': True,
+           'TRANSFORMS': [['ssl_rotate', {'indices': [0]}],
+                          ['RandomHorizontalFlip'],
+                          ['ToTensor'],
+                          ['Normalize',
+                           {'args': [[0.44671062, 0.43980984, 0.40664645],
+                                     [0.26034098, 0.25657727, 0.27126738]]}]]},
+ 'TRAINER': {'AUTO_RESUME': True,
+             'CRITERION': 'cross_entropy_multiple_output_single_target',
+             'EVAL_LOOP': 'adv_eval_loop',
+             'EVAL_METERS': {'accuracy': {'topk': [1]}, 'loss': {}},
+             'EVAL_MODEL': True,
+             'EVAL_PERIOD': 1,
+             'LOG_ITER_PERIOD': 100,
+             'MAX_EPOCHS': 120,
+             'NUM_WORKERS': 20,
+             'RESET_START_EPOCH': False,
+             'TRAIN_LOOP': 'adv_train_loop',
+             'TRAIN_METERS': {'accuracy': {'topk': [1]}, 'loss': {}}},
+ 'VERBOSE': True}
+[INFO: generic_trainer.py:   48]: System config:
+PyTorch version: 1.3.1
+Is debug build: No
+CUDA used to build PyTorch: 10.1.243
+
+OS: CentOS Linux release 7.3.1611 (Core) 
+GCC version: (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)
+CMake version: Could not collect
+
+Python version: 3.6
+Is CUDA available: Yes
+CUDA runtime version: Could not collect
+GPU models and configuration: GPU 0: Tesla K80
+Nvidia driver version: 418.39
+cuDNN version: Could not collect
+
+Versions of relevant libraries:
+[pip3] numpy==1.15.1
+[pip3] numpydoc==0.8.0
+[conda] blas                      1.0                         mkl  
+[conda] mkl                       2019.4                      243  
+[conda] mkl-service               2.3.0            py36he904b0f_0  
+[conda] mkl_fft                   1.0.15           py36ha843d7b_0  
+[conda] mkl_random                1.1.0            py36hd6b4f25_0  
+[conda] pytorch                   1.3.1           py3.6_cuda10.1.243_cudnn7.6.3_0    pytorch
+[conda] torchvision               0.4.2                py36_cu101    pytorch
+[INFO: __init__.py:   74]: SGD (
+Parameter Group 0
+    dampening: 0
+    lr: 0.1
+    momentum: 0.9
+    nesterov: True
+    weight_decay: 0.0001
+
+Parameter Group 1
+    dampening: 0
+    lr: 0.1
+    momentum: 0.9
+    nesterov: True
+    weight_decay: 0.0
+)
+[INFO: __init__.py:   75]: Traininable params: 36
+[INFO: __init__.py:   78]: Regularized Parameters: 18. Unregularized Parameters 18
+[INFO: generic_trainer.py:   55]: BaseImageSSLModel(
+  (trunk): VGG_A(
+    (_feature_blocks): ModuleList(
+      (0): Sequential(
+        (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (2): Sequential(
+        (0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (4): Sequential(
+        (0): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (5): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (6): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (7): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (8): Sequential(
+        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (9): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (10): Sequential(
+        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (11): Sequential(
+        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (12): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+  (clf_heads): ModuleList(
+    (0): Eval_MLP(
+      (channel_bn): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (clf): MLP(
+        (clf): Sequential(
+          (0): Linear(in_features=4608, out_features=4, bias=True)
+        )
+      )
+    )
+  )
+)
+[INFO: generic_trainer.py:   81]: Loaded checkpoint from: ./checkpoint_adv_training/model_epoch_0020.pyth
+[INFO: generic_trainer.py:  124]: => Training model...
+[INFO: utils.py:   78]: Epoch 21/120 | Iter 100/351 | Lr: [0.1, 0.1] | top_1: 0.557 | loss: 0.877
+[INFO: utils.py:   78]: Epoch 21/120 | Iter 200/351 | Lr: [0.1, 0.1] | top_1: 0.559 | loss: 0.879
+[INFO: utils.py:   78]: Epoch 21/120 | Iter 300/351 | Lr: [0.1, 0.1] | top_1: 0.561 | loss: 0.879
+[INFO: adv_train_loop.py:   76]: Epoch: 21. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5614984035491943}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.878538706193962}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0021.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 21. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.4899839758872986}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8994660224670019}
+[INFO: utils.py:   91]: Epoch Time: 0:53:24.898042, ETA Time: 3 days, 17:01:29.804244
+[INFO: utils.py:   78]: Epoch 22/120 | Iter 100/351 | Lr: [0.1, 0.1] | top_1: 0.565 | loss: 0.873
+[INFO: utils.py:   78]: Epoch 22/120 | Iter 200/351 | Lr: [0.1, 0.1] | top_1: 0.565 | loss: 0.873
+[INFO: utils.py:   78]: Epoch 22/120 | Iter 300/351 | Lr: [0.1, 0.1] | top_1: 0.564 | loss: 0.873
+[INFO: adv_train_loop.py:   76]: Epoch: 22. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5626446604728699}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.872872626170134}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0022.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 22. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5331530570983887}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8696864889218257}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.519986, ETA Time: 3 days, 16:12:43.192415
+[INFO: utils.py:   78]: Epoch 23/120 | Iter 100/351 | Lr: [0.1, 0.1] | top_1: 0.563 | loss: 0.867
+[INFO: utils.py:   78]: Epoch 23/120 | Iter 200/351 | Lr: [0.1, 0.1] | top_1: 0.564 | loss: 0.865
+[INFO: utils.py:   78]: Epoch 23/120 | Iter 300/351 | Lr: [0.1, 0.1] | top_1: 0.564 | loss: 0.864
+[INFO: adv_train_loop.py:   76]: Epoch: 23. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5639690160751343}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.8627882897004783}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0023.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 23. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5902444124221802}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8630840587310302}
+[INFO: utils.py:   91]: Epoch Time: 0:53:32.003033, ETA Time: 3 days, 15:21:35.754668
+[INFO: utils.py:   78]: Epoch 24/120 | Iter 100/351 | Lr: [0.1, 0.1] | top_1: 0.567 | loss: 0.854
+[INFO: utils.py:   78]: Epoch 24/120 | Iter 200/351 | Lr: [0.1, 0.1] | top_1: 0.569 | loss: 0.851
+[INFO: utils.py:   78]: Epoch 24/120 | Iter 300/351 | Lr: [0.1, 0.1] | top_1: 0.568 | loss: 0.853
+[INFO: adv_train_loop.py:   76]: Epoch: 24. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5677416920661926}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.8535892306230007}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0024.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 24. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5630007982254028}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8586528943135188}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.783870, ETA Time: 3 days, 14:29:10.719595
+[INFO: utils.py:   78]: Epoch 25/120 | Iter 100/351 | Lr: [0.1, 0.1] | top_1: 0.578 | loss: 0.837
+[INFO: utils.py:   78]: Epoch 25/120 | Iter 200/351 | Lr: [0.1, 0.1] | top_1: 0.573 | loss: 0.844
+[INFO: utils.py:   78]: Epoch 25/120 | Iter 300/351 | Lr: [0.1, 0.1] | top_1: 0.574 | loss: 0.841
+[INFO: adv_train_loop.py:   76]: Epoch: 25. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5744969844818115}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.8408519535662442}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0025.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 25. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5446714758872986}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8582539229820936}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.556710, ETA Time: 3 days, 13:36:14.623531
+[INFO: utils.py:   78]: Epoch 26/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.587 | loss: 0.811
+[INFO: utils.py:   78]: Epoch 26/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.586 | loss: 0.806
+[INFO: utils.py:   78]: Epoch 26/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.59 | loss: 0.803
+[INFO: adv_train_loop.py:   76]: Epoch: 26. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5909677743911743}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.8006877853320196}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0026.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 26. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5714142918586731}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.8000406813927186}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.602594, ETA Time: 3 days, 12:43:07.433739
+[INFO: utils.py:   78]: Epoch 27/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.589 | loss: 0.796
+[INFO: utils.py:   78]: Epoch 27/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.593 | loss: 0.788
+[INFO: utils.py:   78]: Epoch 27/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.594 | loss: 0.789
+[INFO: adv_train_loop.py:   76]: Epoch: 27. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.5948183536529541}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7885568522320174}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0027.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 27. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5708132982254028}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.801647024276929}
+[INFO: utils.py:   91]: Epoch Time: 0:53:23.842228, ETA Time: 3 days, 11:48:09.058232
+[INFO: utils.py:   78]: Epoch 28/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.601 | loss: 0.775
+[INFO: utils.py:   78]: Epoch 28/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.599 | loss: 0.782
+[INFO: utils.py:   78]: Epoch 28/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.6 | loss: 0.782
+[INFO: adv_train_loop.py:   76]: Epoch: 28. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6005386114120483}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7815391266787494}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0028.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 28. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5953525900840759}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7991426732295599}
+[INFO: utils.py:   91]: Epoch Time: 0:53:25.468026, ETA Time: 3 days, 10:53:53.215952
+[INFO: utils.py:   78]: Epoch 29/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.598 | loss: 0.776
+[INFO: utils.py:   78]: Epoch 29/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.602 | loss: 0.775
+[INFO: utils.py:   78]: Epoch 29/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.601 | loss: 0.776
+[INFO: adv_train_loop.py:   76]: Epoch: 29. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.602096676826477}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7762837644316193}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0029.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 29. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.594651460647583}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7905688981215159}
+[INFO: utils.py:   91]: Epoch Time: 0:53:28.739396, ETA Time: 3 days, 10:00:22.008620
+[INFO: utils.py:   78]: Epoch 30/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.601 | loss: 0.772
+[INFO: utils.py:   78]: Epoch 30/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.601 | loss: 0.774
+[INFO: utils.py:   78]: Epoch 30/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.601 | loss: 0.775
+[INFO: adv_train_loop.py:   76]: Epoch: 30. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6003049612045288}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7753952109915578}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0030.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 30. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6018629670143127}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.787226541684224}
+[INFO: utils.py:   91]: Epoch Time: 0:53:26.912511, ETA Time: 3 days, 9:06:34.670219
+[INFO: utils.py:   78]: Epoch 31/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.608 | loss: 0.765
+[INFO: utils.py:   78]: Epoch 31/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.606 | loss: 0.77
+[INFO: utils.py:   78]: Epoch 31/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.604 | loss: 0.773
+[INFO: adv_train_loop.py:   76]: Epoch: 31. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6031984686851501}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7740110281186227}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0031.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 31. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5379607081413269}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7986863308992141}
+[INFO: utils.py:   91]: Epoch Time: 0:53:23.782169, ETA Time: 3 days, 8:12:25.433728
+[INFO: utils.py:   78]: Epoch 32/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.607 | loss: 0.772
+[INFO: utils.py:   78]: Epoch 32/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.605 | loss: 0.77
+[INFO: utils.py:   78]: Epoch 32/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.604 | loss: 0.772
+[INFO: adv_train_loop.py:   76]: Epoch: 32. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6043447256088257}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7708711116402237}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0032.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 32. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5672075152397156}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7874885354286585}
+[INFO: utils.py:   91]: Epoch Time: 0:53:26.254391, ETA Time: 3 days, 7:18:42.108607
+[INFO: utils.py:   78]: Epoch 33/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.765
+[INFO: utils.py:   78]: Epoch 33/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.767
+[INFO: utils.py:   78]: Epoch 33/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.607 | loss: 0.768
+[INFO: adv_train_loop.py:   76]: Epoch: 33. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6077056527137756}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7666298714798061}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0033.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 33. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5661057829856873}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7916908478125547}
+[INFO: utils.py:   91]: Epoch Time: 0:52:46.293490, ETA Time: 3 days, 6:20:30.905191
+[INFO: utils.py:   78]: Epoch 34/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.607 | loss: 0.765
+[INFO: utils.py:   78]: Epoch 34/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.604 | loss: 0.766
+[INFO: utils.py:   78]: Epoch 34/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.606 | loss: 0.765
+[INFO: adv_train_loop.py:   76]: Epoch: 34. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6062366366386414}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7644457922362194}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0034.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 34. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5454727411270142}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7906283560471657}
+[INFO: utils.py:   91]: Epoch Time: 0:53:01.466080, ETA Time: 3 days, 5:24:40.404286
+[INFO: utils.py:   78]: Epoch 35/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.607 | loss: 0.761
+[INFO: utils.py:   78]: Epoch 35/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.606 | loss: 0.762
+[INFO: utils.py:   78]: Epoch 35/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.605 | loss: 0.763
+[INFO: adv_train_loop.py:   76]: Epoch: 35. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.605479896068573}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7639970799796602}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0035.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 35. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6365184187889099}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7817261226666279}
+[INFO: utils.py:   91]: Epoch Time: 0:53:01.688763, ETA Time: 3 days, 4:29:13.718072
+[INFO: utils.py:   78]: Epoch 36/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.762
+[INFO: utils.py:   78]: Epoch 36/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.76
+[INFO: utils.py:   78]: Epoch 36/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.762
+[INFO: adv_train_loop.py:   76]: Epoch: 36. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6092970967292786}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7614782641076634}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0036.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 36. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5971554517745972}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7741583425265092}
+[INFO: utils.py:   91]: Epoch Time: 0:52:51.966831, ETA Time: 3 days, 3:33:13.508775
+[INFO: utils.py:   78]: Epoch 37/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.756
+[INFO: utils.py:   78]: Epoch 37/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.756
+[INFO: utils.py:   78]: Epoch 37/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.756
+[INFO: adv_train_loop.py:   76]: Epoch: 37. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6084179282188416}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7579150527630776}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0037.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 37. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6038661599159241}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7759468914606632}
+[INFO: utils.py:   91]: Epoch Time: 0:52:36.248919, ETA Time: 3 days, 2:36:17.780677
+[INFO: utils.py:   78]: Epoch 38/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.606 | loss: 0.759
+[INFO: utils.py:   78]: Epoch 38/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.609 | loss: 0.756
+[INFO: utils.py:   78]: Epoch 38/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.754
+[INFO: adv_train_loop.py:   76]: Epoch: 38. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6093972325325012}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7556572388380002}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0038.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 38. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5801281929016113}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7828406271262046}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.284171, ETA Time: 3 days, 1:44:00.046148
+[INFO: utils.py:   78]: Epoch 39/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.612 | loss: 0.749
+[INFO: utils.py:   78]: Epoch 39/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.611 | loss: 0.75
+[INFO: utils.py:   78]: Epoch 39/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.611 | loss: 0.749
+[INFO: adv_train_loop.py:   76]: Epoch: 39. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6106659770011902}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7516763707851073}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0039.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 39. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5473757982254028}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7772823251210726}
+[INFO: utils.py:   91]: Epoch Time: 0:53:25.952004, ETA Time: 3 days, 0:51:15.978092
+[INFO: utils.py:   78]: Epoch 40/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.75
+[INFO: utils.py:   78]: Epoch 40/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.607 | loss: 0.752
+[INFO: utils.py:   78]: Epoch 40/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.608 | loss: 0.753
+[INFO: adv_train_loop.py:   76]: Epoch: 40. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6087962985038757}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7514774323868276}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0040.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 40. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6069711446762085}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7749912532476279}
+[INFO: utils.py:   91]: Epoch Time: 0:53:27.676273, ETA Time: 2 days, 23:58:34.704934
+[INFO: utils.py:   78]: Epoch 41/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.614 | loss: 0.747
+[INFO: utils.py:   78]: Epoch 41/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.613 | loss: 0.747
+[INFO: utils.py:   78]: Epoch 41/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.613 | loss: 0.749
+[INFO: adv_train_loop.py:   76]: Epoch: 41. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6125689744949341}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7489129607154433}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0041.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 41. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5903445482254028}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7795670674397395}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.538574, ETA Time: 2 days, 23:05:59.916434
+[INFO: utils.py:   78]: Epoch 42/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.611 | loss: 0.75
+[INFO: utils.py:   78]: Epoch 42/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.745
+[INFO: utils.py:   78]: Epoch 42/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.61 | loss: 0.746
+[INFO: adv_train_loop.py:   76]: Epoch: 42. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6095975637435913}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7474212751768933}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0042.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 42. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6064703464508057}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7698923754386413}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.251523, ETA Time: 2 days, 22:13:22.619880
+[INFO: utils.py:   78]: Epoch 43/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.611 | loss: 0.753
+[INFO: utils.py:   78]: Epoch 43/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.612 | loss: 0.749
+[INFO: utils.py:   78]: Epoch 43/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.613 | loss: 0.747
+[INFO: adv_train_loop.py:   76]: Epoch: 43. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6129918694496155}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7456118228428724}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0043.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 43. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5881410241127014}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7676265912178235}
+[INFO: utils.py:   91]: Epoch Time: 0:53:29.249328, ETA Time: 2 days, 21:20:33.841538
+[INFO: utils.py:   78]: Epoch 44/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.62 | loss: 0.743
+[INFO: utils.py:   78]: Epoch 44/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.616 | loss: 0.743
+[INFO: utils.py:   78]: Epoch 44/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.616 | loss: 0.742
+[INFO: adv_train_loop.py:   76]: Epoch: 44. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6160634756088257}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7416965299182467}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0044.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 44. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5875400900840759}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7748778798641303}
+[INFO: utils.py:   91]: Epoch Time: 0:53:27.993342, ETA Time: 2 days, 20:27:37.660992
+[INFO: utils.py:   78]: Epoch 45/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.615 | loss: 0.738
+[INFO: utils.py:   78]: Epoch 45/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.615 | loss: 0.737
+[INFO: utils.py:   78]: Epoch 45/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.613 | loss: 0.739
+[INFO: adv_train_loop.py:   76]: Epoch: 45. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6126803159713745}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7401992046934927}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0045.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 45. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.608473539352417}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7678781044788849}
+[INFO: utils.py:   91]: Epoch Time: 0:53:33.649486, ETA Time: 2 days, 19:34:56.130100
+[INFO: utils.py:   78]: Epoch 46/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.62 | loss: 0.729
+[INFO: utils.py:   78]: Epoch 46/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.616 | loss: 0.733
+[INFO: utils.py:   78]: Epoch 46/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.615 | loss: 0.735
+[INFO: adv_train_loop.py:   76]: Epoch: 46. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6162081360816956}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7361980163813316}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0046.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 46. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.612379789352417}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7624188600442349}
+[INFO: utils.py:   91]: Epoch Time: 0:53:37.976227, ETA Time: 2 days, 18:42:23.071069
+[INFO: utils.py:   78]: Epoch 47/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.614 | loss: 0.734
+[INFO: utils.py:   78]: Epoch 47/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.616 | loss: 0.735
+[INFO: utils.py:   78]: Epoch 47/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.618 | loss: 0.734
+[INFO: adv_train_loop.py:   76]: Epoch: 47. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6164863705635071}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7355996370315552}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0047.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 47. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5509815812110901}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7639545515561715}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.656989, ETA Time: 2 days, 17:49:25.143221
+[INFO: utils.py:   78]: Epoch 48/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.616 | loss: 0.737
+[INFO: utils.py:   78]: Epoch 48/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.614 | loss: 0.737
+[INFO: utils.py:   78]: Epoch 48/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.617 | loss: 0.733
+[INFO: adv_train_loop.py:   76]: Epoch: 48. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6177662014961243}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7322692045798669}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0048.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 48. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5773237347602844}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7693077172988501}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.259617, ETA Time: 2 days, 16:56:23.841573
+[INFO: utils.py:   78]: Epoch 49/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.621 | loss: 0.728
+[INFO: utils.py:   78]: Epoch 49/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.618 | loss: 0.729
+[INFO: utils.py:   78]: Epoch 49/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.618 | loss: 0.731
+[INFO: adv_train_loop.py:   76]: Epoch: 49. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6169871687889099}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7316114583246389}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0049.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 49. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5441706776618958}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7642053327499292}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.915463, ETA Time: 2 days, 16:03:22.171132
+[INFO: utils.py:   78]: Epoch 50/120 | Iter 100/351 | Lr: [0.01, 0.01] | top_1: 0.623 | loss: 0.726
+[INFO: utils.py:   78]: Epoch 50/120 | Iter 200/351 | Lr: [0.01, 0.01] | top_1: 0.621 | loss: 0.727
+[INFO: utils.py:   78]: Epoch 50/120 | Iter 300/351 | Lr: [0.01, 0.01] | top_1: 0.619 | loss: 0.73
+[INFO: adv_train_loop.py:   76]: Epoch: 50. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6190682649612427}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7300597213611983}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0050.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 50. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6060696840286255}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7598321644159464}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.526516, ETA Time: 2 days, 15:10:19.997181
+[INFO: utils.py:   78]: Epoch 51/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.624 | loss: 0.714
+[INFO: utils.py:   78]: Epoch 51/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.622 | loss: 0.713
+[INFO: utils.py:   78]: Epoch 51/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.623 | loss: 0.712
+[INFO: adv_train_loop.py:   76]: Epoch: 51. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6229856610298157}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7136332064951927}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0051.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 51. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6293069124221802}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7501766674029522}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.660914, ETA Time: 2 days, 14:17:13.974931
+[INFO: utils.py:   78]: Epoch 52/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.625 | loss: 0.709
+[INFO: utils.py:   78]: Epoch 52/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.626 | loss: 0.708
+[INFO: utils.py:   78]: Epoch 52/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.626 | loss: 0.709
+[INFO: adv_train_loop.py:   76]: Epoch: 52. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6264578700065613}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7077253432015748}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0052.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 52. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6205929517745972}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7486245265373817}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.638608, ETA Time: 2 days, 13:24:06.364666
+[INFO: utils.py:   78]: Epoch 53/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.624 | loss: 0.704
+[INFO: utils.py:   78]: Epoch 53/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.625 | loss: 0.707
+[INFO: utils.py:   78]: Epoch 53/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.626 | loss: 0.707
+[INFO: adv_train_loop.py:   76]: Epoch: 53. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6260683536529541}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7067740547690976}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0053.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 53. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6030648946762085}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7515663137802711}
+[INFO: utils.py:   91]: Epoch Time: 0:53:29.877433, ETA Time: 2 days, 12:30:55.790262
+[INFO: utils.py:   78]: Epoch 54/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.628 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 54/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.626 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 54/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.626 | loss: 0.705
+[INFO: adv_train_loop.py:   76]: Epoch: 54. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.625556468963623}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7071597654255707}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0054.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 54. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6152844429016113}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.751691901530975}
+[INFO: utils.py:   91]: Epoch Time: 0:53:29.765196, ETA Time: 2 days, 11:37:43.859214
+[INFO: utils.py:   78]: Epoch 55/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.631 | loss: 0.705
+[INFO: utils.py:   78]: Epoch 55/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.628 | loss: 0.705
+[INFO: utils.py:   78]: Epoch 55/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.627 | loss: 0.708
+[INFO: adv_train_loop.py:   76]: Epoch: 55. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6267249584197998}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7069642808702257}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0055.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 55. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5609976053237915}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7536187439392774}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.873352, ETA Time: 2 days, 10:44:32.998736
+[INFO: utils.py:   78]: Epoch 56/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.629 | loss: 0.706
+[INFO: utils.py:   78]: Epoch 56/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.631 | loss: 0.703
+[INFO: utils.py:   78]: Epoch 56/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.704
+[INFO: adv_train_loop.py:   76]: Epoch: 56. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6302306056022644}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7036817404958937}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0056.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 56. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6369190812110901}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7492695764089242}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.436516, ETA Time: 2 days, 9:51:20.237701
+[INFO: utils.py:   78]: Epoch 57/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 57/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.7
+[INFO: utils.py:   78]: Epoch 57/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.628 | loss: 0.701
+[INFO: adv_train_loop.py:   76]: Epoch: 57. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6280493140220642}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7007354672817763}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0057.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 57. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6164863705635071}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7425235311190287}
+[INFO: utils.py:   91]: Epoch Time: 0:53:29.453869, ETA Time: 2 days, 8:58:04.821520
+[INFO: utils.py:   78]: Epoch 58/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.696
+[INFO: utils.py:   78]: Epoch 58/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.698
+[INFO: utils.py:   78]: Epoch 58/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.7
+[INFO: adv_train_loop.py:   76]: Epoch: 58. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6317330002784729}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7008159410240303}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0058.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 58. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6075721383094788}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7535574283355322}
+[INFO: utils.py:   91]: Epoch Time: 0:53:27.083276, ETA Time: 2 days, 8:04:44.736321
+[INFO: utils.py:   78]: Epoch 59/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.703
+[INFO: utils.py:   78]: Epoch 59/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.702
+[INFO: utils.py:   78]: Epoch 59/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.704
+[INFO: adv_train_loop.py:   76]: Epoch: 59. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6308649182319641}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.7027596326974722}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0059.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 59. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6154847741127014}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7504509091377258}
+[INFO: utils.py:   91]: Epoch Time: 0:53:23.413027, ETA Time: 2 days, 7:11:18.457491
+[INFO: utils.py:   78]: Epoch 60/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.627 | loss: 0.704
+[INFO: utils.py:   78]: Epoch 60/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.699
+[INFO: utils.py:   78]: Epoch 60/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.699
+[INFO: adv_train_loop.py:   76]: Epoch: 60. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6302528381347656}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6992509976411477}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0060.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 60. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6182892918586731}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.748418832436586}
+[INFO: utils.py:   91]: Epoch Time: 0:53:20.823856, ETA Time: 2 days, 6:17:48.373465
+[INFO: utils.py:   78]: Epoch 61/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.696
+[INFO: utils.py:   78]: Epoch 61/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.696
+[INFO: utils.py:   78]: Epoch 61/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.699
+[INFO: adv_train_loop.py:   76]: Epoch: 61. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.630152702331543}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6978214996153134}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0061.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 61. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6365184187889099}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.746805027509347}
+[INFO: utils.py:   91]: Epoch Time: 0:53:16.714740, ETA Time: 2 days, 5:24:12.727814
+[INFO: utils.py:   78]: Epoch 62/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.628 | loss: 0.696
+[INFO: utils.py:   78]: Epoch 62/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.697
+[INFO: utils.py:   78]: Epoch 62/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.631 | loss: 0.696
+[INFO: adv_train_loop.py:   76]: Epoch: 62. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6305755972862244}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6978416300227499}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0062.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 62. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.62109375}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.748879937789379}
+[INFO: utils.py:   91]: Epoch Time: 0:53:21.815764, ETA Time: 2 days, 4:30:45.149360
+[INFO: utils.py:   78]: Epoch 63/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 63/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.696
+[INFO: utils.py:   78]: Epoch 63/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.629 | loss: 0.698
+[INFO: adv_train_loop.py:   76]: Epoch: 63. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6296296119689941}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.698107057826811}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0063.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 63. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.585036039352417}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7469970331742213}
+[INFO: utils.py:   91]: Epoch Time: 0:53:28.834164, ETA Time: 2 days, 3:37:27.305617
+[INFO: utils.py:   78]: Epoch 64/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.699
+[INFO: utils.py:   78]: Epoch 64/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.697
+[INFO: utils.py:   78]: Epoch 64/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.698
+[INFO: adv_train_loop.py:   76]: Epoch: 64. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6318554282188416}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6989618806417851}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0064.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 64. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6157852411270142}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7474471162527035}
+[INFO: utils.py:   91]: Epoch Time: 0:53:32.570855, ETA Time: 2 days, 2:44:13.803023
+[INFO: utils.py:   78]: Epoch 65/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.703
+[INFO: utils.py:   78]: Epoch 65/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 65/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.631 | loss: 0.699
+[INFO: adv_train_loop.py:   76]: Epoch: 65. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6315215229988098}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.698677163008611}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0065.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 65. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6161859035491943}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7430298595856397}
+[INFO: utils.py:   91]: Epoch Time: 0:53:34.086682, ETA Time: 2 days, 1:51:01.339312
+[INFO: utils.py:   78]: Epoch 66/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.701
+[INFO: utils.py:   78]: Epoch 66/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.635 | loss: 0.698
+[INFO: utils.py:   78]: Epoch 66/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.696
+[INFO: adv_train_loop.py:   76]: Epoch: 66. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6354166865348816}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6961239985590987}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0066.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 66. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6070713400840759}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7485323097461309}
+[INFO: utils.py:   91]: Epoch Time: 0:53:27.481734, ETA Time: 2 days, 0:57:40.038252
+[INFO: utils.py:   78]: Epoch 67/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.692
+[INFO: utils.py:   78]: Epoch 67/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.692
+[INFO: utils.py:   78]: Epoch 67/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.635 | loss: 0.693
+[INFO: adv_train_loop.py:   76]: Epoch: 67. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6341590881347656}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6935791945525384}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0067.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 67. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6293069124221802}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7502519259086022}
+[INFO: utils.py:   91]: Epoch Time: 0:53:24.597328, ETA Time: 2 days, 0:04:15.160187
+[INFO: utils.py:   78]: Epoch 68/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.694
+[INFO: utils.py:   78]: Epoch 68/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.693
+[INFO: utils.py:   78]: Epoch 68/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.693
+[INFO: adv_train_loop.py:   76]: Epoch: 68. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6329794526100159}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6928420328346753}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0068.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 68. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6114783883094788}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7459906821067517}
+[INFO: utils.py:   91]: Epoch Time: 0:53:23.856773, ETA Time: 1 day, 23:10:49.476123
+[INFO: utils.py:   78]: Epoch 69/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.639 | loss: 0.691
+[INFO: utils.py:   78]: Epoch 69/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.697
+[INFO: utils.py:   78]: Epoch 69/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.696
+[INFO: adv_train_loop.py:   76]: Epoch: 69. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6321113705635071}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6960299515995885}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0069.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 69. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6004607081413269}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7504076499205369}
+[INFO: utils.py:   91]: Epoch Time: 0:53:24.275683, ETA Time: 1 day, 22:17:24.311200
+[INFO: utils.py:   78]: Epoch 70/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.69
+[INFO: utils.py:   78]: Epoch 70/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.693
+[INFO: utils.py:   78]: Epoch 70/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.694
+[INFO: adv_train_loop.py:   76]: Epoch: 70. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6319555640220642}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6949741454885217}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0070.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 70. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5844351053237915}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7470620243977277}
+[INFO: utils.py:   91]: Epoch Time: 0:53:29.923012, ETA Time: 1 day, 21:24:04.942122
+[INFO: utils.py:   78]: Epoch 71/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.693
+[INFO: utils.py:   78]: Epoch 71/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.691
+[INFO: utils.py:   78]: Epoch 71/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.693
+[INFO: adv_train_loop.py:   76]: Epoch: 71. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6328125}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6941868009051027}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0071.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 71. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.625}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7448328404854505}
+[INFO: utils.py:   91]: Epoch Time: 0:53:21.111230, ETA Time: 1 day, 20:30:36.520162
+[INFO: utils.py:   78]: Epoch 72/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.633 | loss: 0.692
+[INFO: utils.py:   78]: Epoch 72/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.63 | loss: 0.694
+[INFO: utils.py:   78]: Epoch 72/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.632 | loss: 0.693
+[INFO: adv_train_loop.py:   76]: Epoch: 72. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6318442821502686}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6918503178490533}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0072.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 72. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.659254789352417}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7388273760294303}
+[INFO: utils.py:   91]: Epoch Time: 0:53:30.778630, ETA Time: 1 day, 19:37:17.489049
+[INFO: utils.py:   78]: Epoch 73/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.639 | loss: 0.688
+[INFO: utils.py:   78]: Epoch 73/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.692
+[INFO: utils.py:   78]: Epoch 73/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.693
+[INFO: adv_train_loop.py:   76]: Epoch: 73. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6345040798187256}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6927824322654311}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0073.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 73. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.5921474099159241}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7486403997127826}
+[INFO: utils.py:   91]: Epoch Time: 0:53:31.040639, ETA Time: 1 day, 18:43:58.251926
+[INFO: utils.py:   78]: Epoch 74/120 | Iter 100/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.686
+[INFO: utils.py:   78]: Epoch 74/120 | Iter 200/351 | Lr: [0.001, 0.001] | top_1: 0.636 | loss: 0.686
+[INFO: utils.py:   78]: Epoch 74/120 | Iter 300/351 | Lr: [0.001, 0.001] | top_1: 0.634 | loss: 0.689
+[INFO: adv_train_loop.py:   76]: Epoch: 74. Train Stats
+[INFO: adv_train_loop.py:   78]: {'name': 'accuracy', 'value': {'top_1': 0.6350827813148499}}
+[INFO: adv_train_loop.py:   78]: {'name': 'loss', 'value': 0.6888023119027119}
+[INFO: checkpoint.py:   79]: Saved checkpoint: ./checkpoint_adv_training/model_epoch_0074.pyth
+[INFO: adv_eval_loop.py:   62]: Epoch: 74. Validation Stats
+[INFO: adv_eval_loop.py:   64]: {'name': 'accuracy', 'value': {'top_1': 0.6091746687889099}}
+[INFO: adv_eval_loop.py:   64]: {'name': 'loss', 'value': 0.7531110728398348}
+[INFO: utils.py:   91]: Epoch Time: 0:53:32.562277, ETA Time: 1 day, 17:50:39.902023
