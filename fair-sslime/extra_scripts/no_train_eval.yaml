@@ -53,7 +53,7 @@ TRAINER:
   TRAIN_METERS: {"accuracy_list": {"num_list": 10, "topk": [1]}, "loss": {}}
   EVAL_LOOP: "generic_eval_loop"
   EVAL_METERS: {"accuracy_list": {"num_list": 10, "topk": [1]}, "loss": {}}
-  MAX_EPOCHS: 120
+  MAX_EPOCHS: 2
   NUM_WORKERS: 45
 
 
