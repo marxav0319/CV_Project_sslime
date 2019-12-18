@@ -1,8 +1,8 @@
 TRAIN:
   DATA_SOURCES: [disk]
-  DATA_PATHS: ["/path/to/data/folder/train_images_0.npy"]
+  DATA_PATHS: ["/scratch/sgt287/cv/CV_Project_sslime/data/train_images_0.npy"]
   LABEL_SOURCES: [disk]
-  LABEL_PATHS: ["/path/to/data/folder/train_labels_0.npy"]
+  LABEL_PATHS: ["/scratch/sgt287/cv/CV_Project_sslime/data/train_labels_0.npy"]
   MMAP_MODE: True
   DEFAULT_GRAY_IMG_SIZE: 96
   BATCH_SIZE: 64
@@ -13,9 +13,9 @@ TRAIN:
 
 TEST:
   DATA_SOURCES: [disk]
-  DATA_PATHS: ["/path/to/data/folder/data/test_images.npy"]
+  DATA_PATHS: ["/scratch/sgt287/cv/CV_Project_sslime/data/test_images.npy"]
   LABEL_SOURCES: [disk]
-  LABEL_PATHS: ["/path/to/data/folder/test_labels.npy"]
+  LABEL_PATHS: ["/scratch/sgt287/cv/CV_Project_sslime/data/test_labels.npy"]
   MMAP_MODE: True
   DEFAULT_GRAY_IMG_SIZE: 96
   BATCH_SIZE: 32
