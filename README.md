@@ -38,14 +38,20 @@ All models are trained the same way (using STL-10):
 `python fair-sslime/tools/train.py --config_file fair-sslime/extra-scripts/<yaml file>`
 
 For basic rotnet, the extra scripts were:
+
 train: unsupervised_vgg_a_rotation_stl_10.yaml
+
 finetune: eval_vgg_a_rotation_stl_10.yaml
 
 For adverserial training on top of basic rotnet:
 Start with basic rotnet trained (but not finetuned)
+
 train: adv_unsupervised_vgg_a_rotation_stl10.yaml
+
 finetune: eval_vgg_a_rotation_stl_10.yaml
 
 For adverserial only:
+
 train: adv_unsupervised_vgg_a_rotation_stl10.yaml
+
 finetune: eval_vgg_a_rotation_stl_10.yaml
