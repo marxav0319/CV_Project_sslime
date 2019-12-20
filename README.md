@@ -7,7 +7,7 @@ By: Soham Tamba and Mark Xavier
 The models we trained for the project are all stored in the `models/` directory
 in the root of this repository.  They are:
 
-DIR basic_rotnet
+**DIR basic_rotnet**
 
 These models simply employ the rotation prediction training
 implemented by sslime.
@@ -15,7 +15,7 @@ implemented by sslime.
 - basic_rotnet_not_finetuned.pyth (rotation model not finetuned)
 - basic_rotnet_finetuned.pyth (rotation model finetuned)
 
-DIR adv_ontop_of_rotnet
+**DIR adv_ontop_of_rotnet**
 
 These models were trained to predict rotations (basic rotnet), then afterward
 underwent another 60 epochs of training with adverserial noise and an
@@ -24,7 +24,7 @@ adverserial eval loop.
 - adverserial_ontop_basic_rotnet_nofinetune.pyth (not finetuned after training)
 - adverserial_ontop_basic_rotnet_finetuned.pyth (model finetuned after training)
 
-DIR adv_only
+**DIR adv_only**
 
 These models were trained from the beginning with only adverserial training.
 
